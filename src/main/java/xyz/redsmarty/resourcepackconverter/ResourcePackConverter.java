@@ -30,8 +30,8 @@ public class ResourcePackConverter {
             File mappingsFile = new File(javaFile.getParentFile(), "cmd_mappings.json");
             FileWriter writer = new FileWriter(mappingsFile);
             long currentTime = System.currentTimeMillis();
-            String dotaSara = ConversionAPI.getInstance().convert(javaFile, bedrockFile, new ConversionOptions("SamplePack", UUID.randomUUID(), new int[] {1, 0, 0}, "geysermc")).getGeneratedCustomModelDataMappings();
-            writer.write(dotaSara);
+            String generatedCustomModelDataMappings = ConversionAPI.getInstance().convert(javaFile, bedrockFile, new ConversionOptions("SamplePack", UUID.randomUUID(), new int[] {1, 0, 0})).getGeneratedCustomModelDataMappings();
+            writer.write(generatedCustomModelDataMappings);
             writer.flush();
             writer.close();
             System.out.println("Converted resource pack in " + (System.currentTimeMillis() - currentTime) + "ms.");
