@@ -2,99 +2,77 @@ package xyz.redsmarty.resourcepackconverter.resourcepacks;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import xyz.redsmarty.resourcepackconverter.resourcepacks.manifests.JavaResourcePackManifest;
 import xyz.redsmarty.resourcepackconverter.utils.InvalidResourcePackException;
 import xyz.redsmarty.resourcepackconverter.utils.Util;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 public final class JavaResourcePack {
-    private final ZipFile zip;
-    private final String hash;
-    private final Map<String, ZipEntry> files = new HashMap<>();
+    private final Map<String, byte[]> files = new HashMap<>();
     private final JavaResourcePackManifest manifest;
 
-    public JavaResourcePack(String name, ZipFile zip, String sha1) throws InvalidResourcePackException {
-        this.zip = zip;
-        this.hash = sha1;
-        readFiles(zip);
-        this.manifest = readMeta(name);
+    public JavaResourcePack(ZipInputStream stream, Consumer<String> logger) throws InvalidResourcePackException, IOException {
+        readFiles(stream, logger);
+        this.manifest = readMeta(logger);
     }
 
-    public InputStream getFile(String path) {
+    public byte[] getFile(String path) {
         if (!files.containsKey(path)) return null;
-        try {
-            return zip.getInputStream(files.get(path));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return files.get(path);
     }
 
-    public Map<String, InputStream> getFiles(String path) {
-        Map<String, InputStream> fileMap = new HashMap<>();
+    public Map<String, byte[]> getFiles(String path) {
+        Map<String, byte[]> fileMap = new HashMap<>();
         files.entrySet().stream().filter(entry -> entry.getKey().startsWith(path) && !entry.getKey().equals(path)).forEach(entry -> {
-            try {
-                fileMap.put(entry.getKey(), zip.getInputStream(entry.getValue()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            fileMap.put(entry.getKey(), entry.getValue());
         });
         return fileMap;
     }
 
-    public Map<String, InputStream> getFilesExact(String path) {
-        Map<String, InputStream> fileMap = new HashMap<>();
+    public Map<String, byte[]> getFilesExact(String path) {
+        Map<String, byte[]> fileMap = new HashMap<>();
         files.entrySet().stream().filter(entry -> entry.getKey().startsWith(path) && !entry.getKey().equals(path) && !entry.getKey().replace(path, "").contains("/")).forEach(entry -> {
-            try {
-                fileMap.put(entry.getKey(), zip.getInputStream(entry.getValue()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            fileMap.put(entry.getKey(), entry.getValue());
         });
         return fileMap;
-    }
-
-    public String getName() {
-        return manifest.getName();
     }
 
     public String getDescription() {
         return manifest.getDescription();
     }
 
-    public int getVersion() {
-        return manifest.getVersion();
-    }
-
-    private JavaResourcePackManifest readMeta(String name) throws InvalidResourcePackException {
+    private JavaResourcePackManifest readMeta(Consumer<String> logger) throws InvalidResourcePackException {
         int version;
         String description;
-        InputStream metaStream = getFile("pack.mcmeta");
+        byte[] metaStream = getFile("pack.mcmeta");
         if (metaStream == null) {
-            throw new InvalidResourcePackException(name, InvalidResourcePackException.Reason.NO_PACK_MCMETA);
+            throw new InvalidResourcePackException(InvalidResourcePackException.Reason.NO_PACK_MCMETA);
         }
         try {
-            JsonObject meta = JsonParser.parseString(Util.streamToString(metaStream)).getAsJsonObject().getAsJsonObject("pack");
+            JsonObject meta = JsonParser.parseString(Util.bytesToString(metaStream)).getAsJsonObject().getAsJsonObject("pack");
             version = meta.getAsJsonPrimitive("pack_format").getAsInt();
-            if (version < 6 ) throw new InvalidResourcePackException(name, InvalidResourcePackException.Reason.OUTDATED_VERSION);
+            if (version < 6 ) throw new InvalidResourcePackException(InvalidResourcePackException.Reason.OUTDATED_VERSION);
             description = meta.getAsJsonPrimitive("description").getAsString();
-        } catch (IllegalStateException e) {
-            throw new InvalidResourcePackException(name, InvalidResourcePackException.Reason.INVALID_PACK_MCMETA);
+        } catch (IllegalStateException | JsonSyntaxException e) {
+            logger.accept("pack.mcmeta is in illegal format.");
+            throw new InvalidResourcePackException(InvalidResourcePackException.Reason.INVALID_PACK_MCMETA);
         }
-        return new JavaResourcePackManifest(name, version, description);
+        return new JavaResourcePackManifest(version, description);
     }
 
-    private void readFiles(ZipFile zip) {
-        zip.entries().asIterator().forEachRemaining(zipEntry -> files.put(zipEntry.getName(), zipEntry));
-    }
+    private void readFiles(ZipInputStream stream, Consumer<String> logger) throws IOException {
+        ZipEntry entry;
 
-    public String getHash() {
-        return hash;
+        while ((entry = stream.getNextEntry()) != null) {
+            files.put(entry.getName(), stream.readAllBytes());
+            logger.accept(String.format("Loaded %s from Minecraft: Java Edition resource pack.", entry.getName()));
+        }
     }
 }

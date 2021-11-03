@@ -18,7 +18,7 @@ public class BedrockResourcePack {
     Map<String, byte[]> files = new HashMap<>();
     private final BedrockResourcePackManifest manifest;
 
-    public BedrockResourcePack(String name, int[] version, String description, InputStream icon) throws InvalidResourcePackException {
+    public BedrockResourcePack(String name, int[] version, String description, byte[] icon) {
         manifest = new BedrockResourcePackManifest(name, version, description);
         if (icon != null) {
             setFile("pack_icon.png", icon);
@@ -31,13 +31,6 @@ public class BedrockResourcePack {
 
     public void setFile(String path, byte[] file) {
         files.put(path, file);
-    }
-    public void setFile(String path, InputStream file) {
-        try {
-            files.put(path, file.readAllBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public String getName() {
@@ -60,6 +53,7 @@ public class BedrockResourcePack {
         if (!file.exists()) {
             file.createNewFile();
         }
+
         ZipOutputStream output = new ZipOutputStream(new FileOutputStream(file));
         for (Map.Entry<String, byte[]> entry : files.entrySet()) {
             output.putNextEntry(new ZipEntry(entry.getKey()));

@@ -12,7 +12,6 @@ import xyz.redsmarty.resourcepackconverter.utils.mappings.ConversionResults;
 import xyz.redsmarty.resourcepackconverter.utils.mappings.TextureMapping;
 import xyz.redsmarty.resourcepackconverter.utils.Util;
 
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,9 +23,10 @@ public class ItemTextureConverter implements AbstractConverter{
             readMappings();
         }
 
-        for (Map.Entry<String, InputStream> javaTexture: javaResourcePack.getFiles("assets/minecraft/textures/item/").entrySet()) {
+        for (Map.Entry<String, byte[]> javaTexture: javaResourcePack.getFiles("assets/minecraft/textures/item/").entrySet()) {
             if (!mappings.containsKey(javaTexture.getKey())) continue;
             bedrockResourcePack.setFile(mappings.get(javaTexture.getKey()).getBedrockName(), javaTexture.getValue());
+            options.getLogger().accept(String.format("Mapped java texture %s to bedrock texture %s.", javaTexture.getKey(), mappings.get(javaTexture.getKey()).getBedrockName()));
         }
     }
 

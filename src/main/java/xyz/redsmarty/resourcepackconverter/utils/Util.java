@@ -1,6 +1,9 @@
 package xyz.redsmarty.resourcepackconverter.utils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,8 +44,12 @@ public class Util {
         return text.toString();
     }
 
-    public static String formatModelName(String itemName, String textureName) {
-        StringBuilder builder = new StringBuilder(itemName);
+    public static String bytesToString(byte[] bytes) {
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    public static String formatModelName(String textureName) {
+        StringBuilder builder = new StringBuilder();
         for (char c : textureName.toCharArray()) {
             if (!Character.isDigit(c)) {
                 builder.append(c);
@@ -71,6 +78,11 @@ public class Util {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars, StandardCharsets.UTF_8);
+    }
+
+    public static int[] getImageDimensions(byte[] data) throws IOException {
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
+        return new int[] {image.getWidth(), image.getHeight()};
     }
 
 }
