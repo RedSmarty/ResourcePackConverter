@@ -1,11 +1,11 @@
-package xyz.redsmarty.resourcepackconverter.utils.mappings.models.bedrock;
+package xyz.redsmarty.resourcepackconverter.utils.type.bedrock.geometry;
 
 import com.google.gson.annotations.SerializedName;
 
 public class Face {
-    double[] uv = new double[2];
+    double[] uv;
     @SerializedName("uv_size")
-    double[] uvSize = new double[2];
+    double[] uvSize;
 
     public double[] getUv() {
         return uv;

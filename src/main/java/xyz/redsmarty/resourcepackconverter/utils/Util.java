@@ -48,9 +48,9 @@ public class Util {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
-    public static String formatModelName(String textureName) {
+    public static String formatItemName(String name) {
         StringBuilder builder = new StringBuilder();
-        for (char c : textureName.toCharArray()) {
+        for (char c : name.toCharArray()) {
             if (!Character.isDigit(c)) {
                 builder.append(c);
                 continue;
@@ -58,6 +58,16 @@ public class Util {
             builder.append(int2word[Character.getNumericValue(c)]);
         }
         return builder.toString();
+    }
+
+    public static String formatBlockName(String name) {
+        // Remove the namespace
+        name = name.replace("minecraft:", "");
+
+        // Replace "[", "=" and "," with underscore and remove "]"
+        name = name.replaceAll("\\[", "_").replaceAll("]", "").replaceAll("=", "_").replaceAll(",", "_");
+
+        return formatItemName(name);
     }
 
     public static byte[] calculateSHA1(File file) {
@@ -85,4 +95,8 @@ public class Util {
         return new int[] {image.getWidth(), image.getHeight()};
     }
 
+    public static String resolveNamespace(String path, String subDir) {
+        String namespace = path.split(":")[0].equals(path) ? "minecraft" : path.split(":")[0];
+        return "assets/" + namespace + "/" + subDir + "/" + path.replace(namespace + ":", "");
+    }
 }

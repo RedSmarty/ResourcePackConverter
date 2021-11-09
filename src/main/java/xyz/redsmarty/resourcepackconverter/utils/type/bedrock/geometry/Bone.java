@@ -1,7 +1,8 @@
-package xyz.redsmarty.resourcepackconverter.utils.mappings.models.bedrock;
+package xyz.redsmarty.resourcepackconverter.utils.type.bedrock.geometry;
 
 import java.util.List;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class Bone {
     private String name;
     private String parent;

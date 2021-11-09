@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import xyz.redsmarty.resourcepackconverter.api.ConversionAPI;
-import xyz.redsmarty.resourcepackconverter.utils.ConversionOptions;
+import xyz.redsmarty.resourcepackconverter.utils.type.ConversionOptions;
 import xyz.redsmarty.resourcepackconverter.utils.InvalidResourcePackException;
 import xyz.redsmarty.resourcepackconverter.utils.Util;
 
@@ -28,9 +28,9 @@ public class ResourcePackConverter {
             long currentTime = System.currentTimeMillis();
 
             StringBuilder logs = new StringBuilder();
-            String generatedCustomModelDataMappings = ConversionAPI.getInstance().convert(new FileInputStream(javaFile), bedrockFile, new ConversionOptions("SamplePack", UUID.randomUUID(), new int[]{1, 0, 0}, Util.bytesToHex(Util.calculateSHA1(javaFile)), message -> {
+            String generatedCustomModelDataMappings = ConversionAPI.getInstance().convert(new FileInputStream(javaFile), bedrockFile, new ConversionOptions("SamplePack", UUID.randomUUID(), new int[]{1, 0, 0}, Util.bytesToHex(Util.calculateSHA1(javaFile)), "rpconverter",message -> {
                 if (logMessages) logs.append(message).append("\n");
-            })).getGeneratedCustomModelDataMappings();
+            })).getGeneratedMappings().getJson();
 
             File mappingsFile = new File(javaFile.getParentFile(), "cmd_mappings.json");
 

@@ -1,11 +1,11 @@
-package xyz.redsmarty.resourcepackconverter.utils.mappings.models.bedrock;
+package xyz.redsmarty.resourcepackconverter.utils.type.bedrock.geometry;
 
 import java.util.List;
 
 public class Geometry {
 
-    private Description description;
-    private List<Bone> bones;
+    private final Description description;
+    private final List<Bone> bones;
 
     public Description getDescription() {
         return description;

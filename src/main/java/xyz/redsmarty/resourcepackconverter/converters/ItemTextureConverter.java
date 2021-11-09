@@ -7,9 +7,9 @@ import com.google.gson.JsonParser;
 import xyz.redsmarty.resourcepackconverter.ResourcePackConverter;
 import xyz.redsmarty.resourcepackconverter.resourcepacks.BedrockResourcePack;
 import xyz.redsmarty.resourcepackconverter.resourcepacks.JavaResourcePack;
-import xyz.redsmarty.resourcepackconverter.utils.ConversionOptions;
-import xyz.redsmarty.resourcepackconverter.utils.mappings.ConversionResults;
-import xyz.redsmarty.resourcepackconverter.utils.mappings.TextureMapping;
+import xyz.redsmarty.resourcepackconverter.utils.type.ConversionOptions;
+import xyz.redsmarty.resourcepackconverter.utils.type.ConversionResults;
+import xyz.redsmarty.resourcepackconverter.utils.type.TextureMapping;
 import xyz.redsmarty.resourcepackconverter.utils.Util;
 
 import java.util.LinkedHashMap;
@@ -26,7 +26,7 @@ public class ItemTextureConverter implements AbstractConverter{
         for (Map.Entry<String, byte[]> javaTexture: javaResourcePack.getFiles("assets/minecraft/textures/item/").entrySet()) {
             if (!mappings.containsKey(javaTexture.getKey())) continue;
             bedrockResourcePack.setFile(mappings.get(javaTexture.getKey()).getBedrockName(), javaTexture.getValue());
-            options.getLogger().accept(String.format("Mapped java texture %s to bedrock texture %s.", javaTexture.getKey(), mappings.get(javaTexture.getKey()).getBedrockName()));
+            options.logger().accept(String.format("Mapped java texture %s to bedrock texture %s.", javaTexture.getKey(), mappings.get(javaTexture.getKey()).getBedrockName()));
         }
     }
 

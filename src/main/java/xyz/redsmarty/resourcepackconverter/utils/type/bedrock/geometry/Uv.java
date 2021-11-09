@@ -1,5 +1,6 @@
-package xyz.redsmarty.resourcepackconverter.utils.mappings.models.bedrock;
+package xyz.redsmarty.resourcepackconverter.utils.type.bedrock.geometry;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class Uv {
     private Face north;
     private Face south;

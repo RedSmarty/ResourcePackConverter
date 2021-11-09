@@ -1,7 +1,6 @@
-package xyz.redsmarty.resourcepackconverter.utils.mappings.models.bedrock;
+package xyz.redsmarty.resourcepackconverter.utils.type.bedrock.geometry;
 
-import com.google.gson.annotations.SerializedName;
-
+@SuppressWarnings("FieldMayBeFinal")
 public class Cube {
     private double[] origin;
     private double[] size;

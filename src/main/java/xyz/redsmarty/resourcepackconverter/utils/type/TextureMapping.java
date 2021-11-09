@@ -1,4 +1,4 @@
-package xyz.redsmarty.resourcepackconverter.utils.mappings;
+package xyz.redsmarty.resourcepackconverter.utils.type;
 
 public class TextureMapping {
     private final String javaName;

@@ -2,8 +2,8 @@ package xyz.redsmarty.resourcepackconverter.converters;
 
 import xyz.redsmarty.resourcepackconverter.resourcepacks.BedrockResourcePack;
 import xyz.redsmarty.resourcepackconverter.resourcepacks.JavaResourcePack;
-import xyz.redsmarty.resourcepackconverter.utils.ConversionOptions;
-import xyz.redsmarty.resourcepackconverter.utils.mappings.ConversionResults;
+import xyz.redsmarty.resourcepackconverter.utils.type.ConversionOptions;
+import xyz.redsmarty.resourcepackconverter.utils.type.ConversionResults;
 
 public interface AbstractConverter {
 

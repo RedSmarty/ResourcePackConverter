@@ -2,12 +2,10 @@ package xyz.redsmarty.resourcepackconverter.resourcepacks;
 
 import com.google.gson.Gson;
 import xyz.redsmarty.resourcepackconverter.resourcepacks.manifests.BedrockResourcePackManifest;
-import xyz.redsmarty.resourcepackconverter.utils.InvalidResourcePackException;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,24 +23,12 @@ public class BedrockResourcePack {
         }
     }
 
-    public byte[] getFile(String path) {
-        return files.get(path);
-    }
-
     public void setFile(String path, byte[] file) {
         files.put(path, file);
     }
 
     public String getName() {
         return manifest.getHeader().getName();
-    }
-
-    public String getDescription() {
-        return manifest.getHeader().getDescription();
-    }
-
-    public int[] getVersion() {
-        return manifest.getHeader().getVersion();
     }
 
     public String getUUID() {

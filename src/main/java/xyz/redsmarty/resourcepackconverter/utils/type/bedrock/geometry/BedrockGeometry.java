@@ -1,7 +1,8 @@
-package xyz.redsmarty.resourcepackconverter.utils.mappings.models.bedrock;
+package xyz.redsmarty.resourcepackconverter.utils.type.bedrock.geometry;
 
 import com.google.gson.annotations.SerializedName;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class BedrockGeometry {
     @SerializedName("format_version")
     private String formatVersion = "1.16.0";
